@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Hostel21UnitTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Hostel21TestSuite (Nov 30, 2013 6:15:23 AM)</a> &gt; <a href="../../index.html" class="el_group">Hostel21</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.html" class="el_package">com.hostel21.unittest</a> &gt; <span class="el_source">Hostel21UnitTest.java</span></div><h1>Hostel21UnitTest.java</h1><pre class="source lang-java linenums">package com.hostel21.unittest;
+
+
+import java.util.List;
+
+import org.junit.Assert;
+
+import junit.framework.TestCase;
+
+import com.hostel21.beans.Booking;
+import com.hostel21.beans.Customer;
+import com.hostel21.beans.Hostel;
+import com.hostel21.beans.Report;
+import com.hostel21.beans.Search;
+import com.hostel21.beans.SearchResult;
+import com.hostel21.beans.User;
+import com.hostel21.dao.CustomerDAO;
+import com.hostel21.dao.DeleteDAO;
+import com.hostel21.dao.HostelDAO;
+import com.hostel21.dao.ReportDAO;
+import com.hostel21.dao.SearchDAO;
+import com.hostel21.dao.UserDAO;
+import com.hostel21.facade.BookingFacade;
+import com.hostel21.load.LoadDataFromXML;
+/**
+ * THe main idea for testing Hostel21 application code is to load hostel data and its availability
+ * in a blank database and then test it to make sure the data is getting stored correctly and retrieving 
+ * the available correctly.
+ */
+public class Hostel21UnitTest extends TestCase {
+<span class="fc" id="L31">    String name=null;</span>
+<span class="fc" id="L32">    Customer cust=null;</span>
+<span class="fc" id="L33">	String hostelName=&quot;Hostel 21 - Romantic&quot;;</span>
+<span class="fc" id="L34">	String address=&quot;424 Clay St&quot;;</span>
+<span class="fc" id="L35">	String city=&quot;San Francisco&quot;;</span>
+<span class="fc" id="L36">	String state=&quot;California&quot;;</span>
+<span class="fc" id="L37">	String postal_code=&quot;94111&quot;;</span>
+<span class="fc" id="L38">	String country=&quot;USA&quot;;</span>
+<span class="fc" id="L39">	String phone=&quot;+1-555-555-5555&quot;;</span>
+<span class="fc" id="L40">	String email=&quot;romantic@hostel21.com&quot;;</span>
+<span class="fc" id="L41">	String facebook=&quot;hostel21-romantic&quot;;</span>
+<span class="fc" id="L42">	String web=&quot;romantic.hostel21.com&quot;;</span>
+<span class="fc" id="L43">	String check_in_time=&quot;14:00&quot;;</span>
+<span class="fc" id="L44">	String check_out_time=&quot;11:00&quot;;</span>
+<span class="fc" id="L45">	String smoking=&quot;N&quot;;</span>
+<span class="fc" id="L46">	String alcohol=&quot;N&quot;;</span>
+<span class="fc" id="L47">	Integer cancellation_deadline=48;</span>
+<span class="fc" id="L48">	Double cancellation_penalty=75.0;</span>
+	
+<span class="fc" id="L50">	String startDate=&quot;2014-07-01&quot;;</span>
+<span class="fc" id="L51">	String endDate=&quot;2014-07-02&quot;;</span>
+	
+<span class="fc" id="L53">	Booking booking=null;</span>
+	
+<span class="fc" id="L55">	User user=null;</span>
+<span class="fc" id="L56">    public Hostel21UnitTest(String name) {</span>
+<span class="fc" id="L57">    	this.name=name;</span>
+<span class="fc" id="L58">    }</span>
+    
+    protected void loadData() {
+<span class="fc" id="L61">    	LoadDataFromXML.load(&quot;/tmp/hostel-inventory-1-20131117.xml&quot;);</span>
+    	//This xml file contains the following data. 
+    	/*
+    	 &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
+		&lt;hostel&gt;
+			&lt;name&gt;Hostel 21 - Romantic&lt;/name&gt;
+			&lt;address&gt;
+				&lt;street&gt;424 Clay St&lt;/street&gt;
+				&lt;city&gt;San Francisco&lt;/city&gt;
+				&lt;state&gt;California&lt;/state&gt;
+				&lt;postal_code&gt;94111&lt;/postal_code&gt;
+				&lt;country&gt;USA&lt;/country&gt;
+			&lt;/address&gt;
+			&lt;contact&gt;
+				&lt;phone&gt;+1-555-555-5555&lt;/phone&gt;
+				&lt;email&gt;romantic@hostel21.com&lt;/email&gt;
+				&lt;facebook&gt;hostel21-romantic&lt;/facebook&gt;
+				&lt;web&gt;romantic.hostel21.com&lt;/web&gt;
+			&lt;/contact&gt;
+			&lt;restrictions&gt;
+				&lt;check_in_time&gt;14:00&lt;/check_in_time&gt;
+				&lt;check_out_time&gt;11:00&lt;/check_out_time&gt;
+				&lt;smoking&gt;N&lt;/smoking&gt;
+				&lt;alcohol&gt;N&lt;/alcohol&gt;
+				&lt;cancellation_deadline&gt;48&lt;/cancellation_deadline&gt;
+				&lt;cancellation_penalty&gt;75%&lt;/cancellation_penalty&gt;
+			&lt;/restrictions&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140701&lt;/date&gt;
+				&lt;room&gt;1&lt;/room&gt;
+				&lt;bed&gt;1&lt;/bed&gt;
+				&lt;price&gt;10&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140701&lt;/date&gt;
+				&lt;room&gt;1&lt;/room&gt;
+				&lt;bed&gt;2&lt;/bed&gt;
+				&lt;price&gt;12&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140701&lt;/date&gt;
+				&lt;room&gt;2&lt;/room&gt;
+				&lt;bed&gt;3&lt;/bed&gt;
+				&lt;price&gt;20&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140702&lt;/date&gt;
+				&lt;room&gt;1&lt;/room&gt;
+				&lt;bed&gt;1&lt;/bed&gt;
+				&lt;price&gt;10&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140702&lt;/date&gt;
+				&lt;room&gt;1&lt;/room&gt;
+				&lt;bed&gt;2&lt;/bed&gt;
+				&lt;price&gt;12&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140702&lt;/date&gt;
+				&lt;room&gt;2&lt;/room&gt;
+				&lt;bed&gt;3&lt;/bed&gt;
+				&lt;price&gt;25&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140703&lt;/date&gt;
+				&lt;room&gt;1&lt;/room&gt;
+				&lt;bed&gt;1&lt;/bed&gt;
+				&lt;price&gt;10&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140703&lt;/date&gt;
+				&lt;room&gt;1&lt;/room&gt;
+				&lt;bed&gt;2&lt;/bed&gt;
+				&lt;price&gt;15&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140703&lt;/date&gt;
+				&lt;room&gt;2&lt;/room&gt;
+				&lt;bed&gt;3&lt;/bed&gt;
+				&lt;price&gt;30&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140704&lt;/date&gt;
+				&lt;room&gt;1&lt;/room&gt;
+				&lt;bed&gt;1&lt;/bed&gt;
+				&lt;price&gt;14&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140704&lt;/date&gt;
+				&lt;room&gt;1&lt;/room&gt;
+				&lt;bed&gt;2&lt;/bed&gt;
+				&lt;price&gt;15&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140704&lt;/date&gt;
+				&lt;room&gt;2&lt;/room&gt;
+				&lt;bed&gt;3&lt;/bed&gt;
+				&lt;price&gt;30&lt;/price&gt;
+			&lt;/availability&gt;
+		&lt;/hostel&gt;
+		
+		
+
+ 
+    	 
+    	 */
+<span class="fc" id="L167">    }</span>
+    protected void setUp() {
+<span class="fc" id="L169">    	user=new User(&quot;stiger&quot;, &quot;Tiger&quot;, &quot;admin&quot;, &quot;Scott&quot;, &quot;Tiger&quot;);</span>
+<span class="fc" id="L170">    	loadData();</span>
+<span class="fc" id="L171">    	cust=new Customer(null, &quot;namrata2@gmail.com&quot;, &quot;Namarta&quot;, &quot;Gaddameedi&quot;, &quot;3149999999&quot;, &quot;1234567890123456&quot;, &quot;2017-01-01&quot;, &quot;999&quot;);</span>
+<span class="fc" id="L172">    }</span>
+    
+    
+    public void testAll() {
+    	//1. test hostel data loaded from xml file
+<span class="fc" id="L177">    	testHostelData();</span>
+    	
+    	//2. test customer add
+<span class="fc" id="L180">    	testCustomerData();</span>
+    	
+    	//3. test search
+<span class="fc" id="L183">    	testSearch();</span>
+    	
+    	//4. test booking
+<span class="fc" id="L186">    	testBooking();</span>
+
+    	//5. test report revenue, occupancy
+<span class="fc" id="L189">    	testReport();</span>
+
+    	//6. test cancel booking
+<span class="fc" id="L192">    	testCancelBooking();</span>
+    	
+    	//7. test modify customer
+<span class="fc" id="L195">    	modifyCustomer();</span>
+    	
+    	//8. add user
+<span class="fc" id="L198">    	testUser();</span>
+<span class="fc" id="L199">    }</span>
+    
+    public void testUser() {
+<span class="fc" id="L202">    	UserDAO.add(user);</span>
+<span class="fc" id="L203">    	User newUser=UserDAO.getById(user.getUserId());</span>
+<span class="fc" id="L204">    	Assert.assertEquals(user.getUserId(), newUser.getUserId());</span>
+<span class="fc" id="L205">    	Assert.assertEquals(user.getPassword(), newUser.getPassword());</span>
+<span class="fc" id="L206">    }</span>
+    
+    
+    public void testReport() {
+<span class="fc" id="L210">    	Report report=ReportDAO.getData(hostelName, startDate, endDate);</span>
+<span class="fc" id="L211">    	Assert.assertEquals(report.getRevenue(), new Double(42.0));</span>
+<span class="fc" id="L212">    	Assert.assertEquals(report.getBookings(), new Integer(1));</span>
+<span class="fc" id="L213">    	Assert.assertEquals(report.getOcupancy_rate(), new Double(100));</span>
+    	
+<span class="fc" id="L215">    }</span>
+    public void testSearch() {
+    	/*
+			&lt;availability&gt;
+				&lt;date&gt;20140701&lt;/date&gt;
+				&lt;room&gt;1&lt;/room&gt;
+				&lt;bed&gt;1&lt;/bed&gt;
+				&lt;price&gt;10&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140701&lt;/date&gt;
+				&lt;room&gt;1&lt;/room&gt;
+				&lt;bed&gt;2&lt;/bed&gt;
+				&lt;price&gt;12&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140701&lt;/date&gt;
+				&lt;room&gt;2&lt;/room&gt;
+				&lt;bed&gt;3&lt;/bed&gt;
+				&lt;price&gt;20&lt;/price&gt;
+			&lt;/availability&gt; 
+			no of bed=3, min price=10, max price=20   	 
+    	 */
+<span class="fc" id="L238">    	SearchResult result=SearchDAO.search(startDate, endDate, hostelName);</span>
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">    	Assert.assertTrue(result!=null);</span>
+<span class="fc" id="L240">    	Assert.assertEquals(result.getFromDate(), startDate);</span>
+<span class="fc" id="L241">    	Assert.assertEquals(result.getToDate(), endDate);</span>
+<span class="fc" id="L242">    	Assert.assertEquals(result.getHostelName(), hostelName);</span>
+<span class="fc" id="L243">    	List&lt;Search&gt; list=result.getList();</span>
+<span class="fc" id="L244">    	Search search=list.get(0);</span>
+<span class="fc" id="L245">    	Assert.assertEquals(search.getMinPrice(), new Double(10.0));</span>
+<span class="fc" id="L246">    	Assert.assertEquals(search.getMaxPrice(), new Double(20.0));</span>
+<span class="fc" id="L247">    	Assert.assertEquals(search.getNoOfBeds(), new Integer(3));</span>
+<span class="fc" id="L248">    }</span>
+    
+    public void modifyCustomer() {
+<span class="fc" id="L251">    	CustomerDAO.modify(cust.getCustomerId(), &quot;Namrata New&quot;, &quot;Gaddameedi New&quot;, cust.getEmailId(),cust.getCcNumber(), cust.getCcExpireDate(), cust.getCcSecurityCode(), cust.getCustPhone(), cust.getFacebook(), cust.getWeb());</span>
+<span class="fc" id="L252">    	Customer modified=CustomerDAO.getByCustomerId(cust.getCustomerId());</span>
+<span class="fc" id="L253">    	Assert.assertEquals(modified.getFirstName(),&quot;Namrata New&quot; );</span>
+<span class="fc" id="L254">    	Assert.assertEquals(modified.getLastName(),&quot;Gaddameedi New&quot; );</span>
+<span class="fc" id="L255">    }</span>
+    
+    public void testBooking() {
+    	/*
+			&lt;availability&gt;
+				&lt;date&gt;20140701&lt;/date&gt;
+				&lt;room&gt;1&lt;/room&gt;
+				&lt;bed&gt;1&lt;/bed&gt;
+				&lt;price&gt;10&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140701&lt;/date&gt;
+				&lt;room&gt;1&lt;/room&gt;
+				&lt;bed&gt;2&lt;/bed&gt;
+				&lt;price&gt;12&lt;/price&gt;
+			&lt;/availability&gt;
+			&lt;availability&gt;
+				&lt;date&gt;20140701&lt;/date&gt;
+				&lt;room&gt;2&lt;/room&gt;
+				&lt;bed&gt;3&lt;/bed&gt;
+				&lt;price&gt;20&lt;/price&gt;
+			&lt;/availability&gt; 
+			no of bed=3, min price=10, max price=20   	 
+    	 */
+    	
+    	//step1: search
+<span class="fc" id="L281">    	SearchResult result=SearchDAO.search(startDate, endDate, hostelName,3);</span>
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">    	Assert.assertTrue(result!=null);</span>
+<span class="fc" id="L283">    	Assert.assertEquals(result.getFromDate(), startDate);</span>
+<span class="fc" id="L284">    	Assert.assertEquals(result.getToDate(), endDate);</span>
+<span class="fc" id="L285">    	Assert.assertEquals(result.getHostelName(), hostelName);</span>
+<span class="fc" id="L286">    	List&lt;Search&gt; list=result.getList();</span>
+<span class="fc" id="L287">    	Search search=list.get(0);</span>
+<span class="fc" id="L288">  	    Assert.assertEquals(search.getNoOfBeds(), new Integer(3));</span>
+<span class="fc" id="L289">  	    Assert.assertEquals(search.getTotalPrice(), new Double(42.0));</span>
+  	    
+  	    //step2: book.
+<span class="fc" id="L292">  	    booking=BookingFacade.book(startDate, endDate, hostelName, 3, search.getAvailableBedIds(), search.getTotalPrice(), cust, &quot;unittest&quot;);</span>
+<span class="fc" id="L293">  	    Assert.assertEquals(booking.getCheckinDate(), startDate);</span>
+<span class="fc" id="L294">  	    Assert.assertEquals(booking.getCheckoutDate(), endDate);</span>
+<span class="fc" id="L295">  	    Assert.assertEquals(booking.getStatus(), &quot;Booked&quot;);</span>
+<span class="fc" id="L296">  	    Assert.assertEquals(booking.getBookingPrice(), search.getTotalPrice());</span>
+<span class="fc" id="L297">  	    Assert.assertEquals(booking.getCancelFee(), new Double(0.0));</span>
+<span class="fc" id="L298">    }</span>
+    
+    public void testCancelBooking() {
+<span class="fc" id="L301">    	Booking cancelled=BookingFacade.cancel(booking.getBookingId(), &quot;unittest&quot;);</span>
+<span class="fc" id="L302">    	Assert.assertEquals(booking.getBookingId(), cancelled.getBookingId());</span>
+<span class="fc" id="L303">    	Assert.assertEquals(cancelled.getStatus(),&quot;Cancelled&quot;);</span>
+<span class="fc" id="L304">    	Assert.assertEquals(booking.getCancelFee(), new Double(0.0));    	</span>
+<span class="fc" id="L305">    }</span>
+    
+    public void testHostelData() {
+<span class="fc" id="L308">    	Hostel hostel=HostelDAO.getByHostelName(&quot;Hostel 21 - Romantic&quot;);</span>
+<span class="pc bpc" id="L309" title="1 of 2 branches missed.">    	Assert.assertTrue(hostel!=null);</span>
+<span class="fc" id="L310">    	Assert.assertEquals(hostel.getName(), hostelName);</span>
+<span class="fc" id="L311">    	Assert.assertEquals(hostel.getStreet(), address);</span>
+<span class="fc" id="L312">    	Assert.assertEquals(hostel.getCity(), city);</span>
+<span class="fc" id="L313">    	Assert.assertEquals(hostel.getState(), state);</span>
+<span class="fc" id="L314">    	Assert.assertEquals(hostel.getPostalCode(), postal_code);</span>
+<span class="fc" id="L315">    	Assert.assertEquals(hostel.getCountry(), country);</span>
+<span class="fc" id="L316">    	Assert.assertEquals(hostel.getPhone(), phone);</span>
+<span class="fc" id="L317">    	Assert.assertEquals(hostel.getEmail(), email);</span>
+<span class="fc" id="L318">    	Assert.assertEquals(hostel.getFacebook(), facebook);</span>
+<span class="fc" id="L319">    	Assert.assertEquals(hostel.getWeb(), web);</span>
+<span class="fc" id="L320">    	Assert.assertEquals(hostel.getCheckinTime(), check_in_time);</span>
+<span class="fc" id="L321">    	Assert.assertEquals(hostel.getCheckoutTime(), check_out_time);</span>
+<span class="fc" id="L322">    	Assert.assertEquals(hostel.getSmoking(), smoking);</span>
+<span class="fc" id="L323">    	Assert.assertEquals(hostel.getAlcohol(), alcohol);</span>
+<span class="fc" id="L324">    	Assert.assertEquals(hostel.getCancellationDeadline(), cancellation_deadline);</span>
+<span class="fc" id="L325">    	Assert.assertEquals(hostel.getCancellPenalty(), cancellation_penalty);</span>
+<span class="fc" id="L326">    }</span>
+    
+    
+    public void testCustomerData() {
+<span class="fc" id="L330">    	CustomerDAO.add(cust);</span>
+<span class="fc" id="L331">    	Customer newCust=CustomerDAO.getByEmailId(cust.getEmailId());</span>
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">    	Assert.assertTrue(newCust!=null);</span>
+<span class="fc" id="L333">    	Assert.assertEquals(newCust.getEmailId(), cust.getEmailId());</span>
+<span class="fc" id="L334">    	Assert.assertEquals(newCust.getFirstName(), cust.getFirstName());</span>
+<span class="fc" id="L335">    	Assert.assertEquals(newCust.getLastName(), cust.getLastName());</span>
+<span class="fc" id="L336">    	Assert.assertEquals(newCust.getCustPhone(), cust.getCustPhone());</span>
+<span class="fc" id="L337">    	Assert.assertEquals(newCust.getCcNumber(), cust.getCcNumber());</span>
+<span class="fc" id="L338">    	Assert.assertEquals(newCust.getCcExpireDate(), cust.getCcExpireDate());</span>
+<span class="fc" id="L339">    	Assert.assertEquals(newCust.getCcSecurityCode(), cust.getCcSecurityCode());</span>
+<span class="fc" id="L340">    	Assert.assertEquals(newCust.getFacebook(), cust.getFacebook());</span>
+<span class="fc" id="L341">    	Assert.assertEquals(newCust.getWeb(), cust.getWeb());</span>
+<span class="fc" id="L342">    	cust=newCust;</span>
+<span class="fc" id="L343">    }</span>
+ }
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span>Hostel21TestSuite (Nov 30, 2013 6:15:23 AM)</div></body></html>

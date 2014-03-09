@@ -1,0 +1,9 @@
+Start sqlite and create database.
+1. open command line cmd.exe
+2. type e:
+3. cd sqlite
+4. delete Hostel21.db if already exists. 
+3. type sqlite3 Hostel21.db < H21DB.sql.
+
+Open workspace-new in eclipse.
+4.run Hostel21TestSuite.java from Hostel21 java project.

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Hostel21TestSuite.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Hostel21TestSuite (Nov 30, 2013 6:15:23 AM)</a> &gt; <a href="../../index.html" class="el_group">Hostel21</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.html" class="el_package">com.hostel21.unittest</a> &gt; <span class="el_source">Hostel21TestSuite.java</span></div><h1>Hostel21TestSuite.java</h1><pre class="source lang-java linenums"><span class="fc" id="L1">package com.hostel21.unittest;</span>
+
+import com.hostel21.dao.DeleteDAO;
+
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
+
+<span class="nc" id="L8">public class Hostel21TestSuite {</span>
+	public static TestSuite suite() {
+<span class="fc" id="L10">    	TestSuite suite= new TestSuite();</span>
+<span class="fc" id="L11">        suite.addTest(</span>
+<span class="fc" id="L12">            new Hostel21UnitTest(&quot;Hostel21UnitTest.testHostelApplication&quot;) {</span>
+<span class="fc" id="L13">                protected void runTest() { testAll(); }</span>
+            }
+        );
+        
+<span class="fc" id="L17">        return suite;</span>
+    }    
+    
+    public static void main(String arg[])   
+    {   
+<span class="fc" id="L22">        TestRunner.run(suite());   </span>
+    	try {
+<span class="fc" id="L24">    		DeleteDAO.deleteAll(&quot;AVAILABILITY&quot;);</span>
+<span class="fc" id="L25">    		DeleteDAO.deleteAll(&quot;HOSTEL&quot;);</span>
+<span class="fc" id="L26">    		DeleteDAO.deleteAll(&quot;CUSTOMER&quot;);</span>
+<span class="fc" id="L27">    		DeleteDAO.deleteAll(&quot;BOOKING&quot;);</span>
+<span class="fc" id="L28">    	}</span>
+<span class="nc" id="L29">    	catch(Exception e) {</span>
+<span class="nc" id="L30">    		e.printStackTrace();</span>
+    	}
+<span class="fc" id="L32">    } </span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span>Hostel21TestSuite (Nov 30, 2013 6:15:23 AM)</div></body></html>

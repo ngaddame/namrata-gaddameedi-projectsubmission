@@ -1,0 +1,99 @@
+
+Overview: 
+---------
+Hostel21.zip contains a war file to run on web server, a sql script to create application tables in sqlite database, a jar file to console based application.  Here is how it packaged.
+
+Hostel21 (root directory)
+--Hostel21Web.war (Web Archive File to deploy in to tomcat web server for Hostel21 web interface).
+--Hostel21_lib (Contains jar files required for Hostel21)
+--Hostel21.jar  (Contains all common Java code required to retrieve and store data in SQLite database. 
+--H21DB.sql (SQLite database script to create empty database).
+--hostel-inventory-1-20131117.xml (sample data)
+--hostel-inventory-2-20131117.xml (sample data)
+--hostel-inventory-1-20131117.xml (sample data)
+
+Hostel21 application, both web and console based application, depends upon the following jar files. Hence make sure these jar files are in the class path. 
+1. junit-4.11.jar for unit test
+2. sqlite-jdbc-3.7.2.jar provides api for connecting to SQLite from Java using jdbc.
+
+Hostel21 application require java, tomcat web server and sqlite3 database. Please install them before running the application.
+
+Software required: See bottom on this document for installation hot to install these software.
+1. Java
+2. Tomcat7 web server
+3. SQlite3
+
+Step1:
+------
+Perform this step if the require software is not present on the system. Instructions to install these software are given below.
+
+
+Installing Java: Enter the following command to install openJDK
+----------------
+
+sudo apt-get install openjdk-7-jre icedtea-7-plugin 
+
+Install & Configure Tomcat web server.
+1. Enter sudo apt-get install tomcat7 to install  tomcat server on linux. Click the link below for more information on hot to install tomcat on ubuntu linux.
+
+https://help.ubuntu.com/10.04/serverguide/tomcat.html
+
+2. Install tomcat7-admin package that contains two webapps that can be used to administer the Tomcat server using a web interface. You need this to deploy Hostel21Web.war file on tomcat server. You can install them by entering the following command in the terminal prompt:
+
+sudo apt-get install tomcat7-admin
+
+3. After installing core tomcat7 and tomcat7-admin packages, update tomcat-users.xml  file to access tomcat admin gui to deploy application. Use the following command.
+
+sudo vi /etc/tomcat7/tomcat-users.xml 
+
+Replace <tomcat-users> node with the following in tomcat-users.xml file.
+
+<tomcat-users> 
+  <role rolename="manager"/> 
+  <role rolename="admin"/> 
+  <role rolename="manager-gui"/> 
+  <user username="tomcat" password="s3cret" roles="manager-gui"/> 
+  <user username="admin" password="admin" roles="admin,manager,manager-gui"/> 
+  <user username="manager" password="manager" roles="manager,manager-gui" /> 
+</tomcat-users> 
+ 
+
+Install SQLite3: Hostel21 application uses SQlite3 database. Install the database by using the following command.
+----------------
+
+sudo apt-get install sqlite3
+
+
+Step2: 
+------
+Unpack Hostel21.zip: Unpack the contents of the Hostel21.zip file to a directory and do the following configuration.
+
+1. Create a directory called “Hostel21” under home and extracts the contents of the zip file in to it.
+2. Open a terminal and go to Hostel21 directory. (cd ~/Hostel21). Check all the files listed in overview are present.
+3. Create Hostel21 sqlite database in /tmp directory. Run the following command.
+    sqlite3 /tmp/Hostel21.db < H21DB.sql
+    go to /tmp director and make sure the Hostel21.db is created.
+
+Step3: 
+------
+Run H21Console application load data first.
+1. Run Hostel21 Console application. Run the following command.
+   java -jar Hostel21.jar
+   Enter admin as user and password.
+2. load the data from the xml files provided with this zip file. You can also use other files but it has to be in the same format as these. Run the following commands in the H21Console.
+    load_data,hostel-inventory-1-20131117.xml
+    load_data,hostel-inventory-2-20131117.xml
+    load_data,hostel-inventory-3-20131117.xml (please ignore error because it has some duplicate data)
+3. Now you are ready to use Hostel21 console application for searching and booking rooms. Please do forget to add customers before creating booking.
+
+Step4: 
+------
+Now deploy Hostel21Web.war in the tomcat web server and use the web interface for Hostel21.
+1. Open browser and enter the following URL. Enter manager as username and password unless you have something different in tomcat-users.xml file.
+    http://localhost:8080/manager/html
+2. Click on Browse button in “WAR file to deploy” section of admin page.
+3. Select Hostel21Web.war file from ~/Hostel21 directory. Open and Click Deploy.
+4. The Hostel21 web interface should be available @ http://localhsot:8080/Hostel21Web/
+
+
+That's all the steps to install and configure the Hostel21 application.

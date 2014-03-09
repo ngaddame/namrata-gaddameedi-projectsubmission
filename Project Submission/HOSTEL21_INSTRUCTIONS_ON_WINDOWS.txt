@@ -1,0 +1,18 @@
+RUN APPLICATION ON WEB SERVER:
+------------------------------
+
+TOMCAT_HOME -- E:\Program Files\apache-tomcat-7.0.47\
+
+1. START TOMCAT SERVER: open windows explorer, run startup.bat file in E:\Program Files\apache-tomcat-7.0.47\bin directory.
+2. INSTALL HOSTEL21 on TOMCAT SERVER: Copy E:\MyWork\Hostel21\Project Submission\Hostel21.war file in to E:\Program Files\apache-tomcat-7.0.47\webapps directory.
+3. Open Internet Explorer and access the application at http://localhost:8080/Hostel21Web/.
+
+RUN CONSOLE
+-----------
+1. Run CMD.exe
+2. type E:
+3. cd E:\MyWork\Hostel21\Project Submission
+4. type java -jar Hostel21.jar to run the console applciation.
+
+source code location in war file after installing:
+E:\Program Files\apache-tomcat-7.0.47\webapps\Hostel21Web\WEB-INF\classes\com\hostel21\action
